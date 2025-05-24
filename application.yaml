@@ -1,5 +1,5 @@
 apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+kind: Application
 metadata:
   name: spring-petclinic
   namespace: argocd
@@ -9,10 +9,10 @@ spec:
   source:
     repoURL: https://github.com/hongphuchcmus/springboot-petclinic-gitops.git
     targetRevision: HEAD
-    path: config
+    path: dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: dev
+    namespace: default
   syncPolicy:
     syncOptions:
     - CreateNamespace=true

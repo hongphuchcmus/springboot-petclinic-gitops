@@ -5,7 +5,7 @@ replicaCount: 1
 
 image:
   repository: hongphuchcmus/spring-petclinic-api-gateway
-  tag: latest
+  tag: 3d00e62
   pullPolicy: IfNotPresent
 
 containerPort: 8080

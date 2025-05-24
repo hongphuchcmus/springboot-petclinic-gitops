@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: "hongphuchcmus/spring-petclinic-api-gateway:latest"
+          image: "hongphuchcmus/spring-petclinic-api-gateway:3d00e62"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
