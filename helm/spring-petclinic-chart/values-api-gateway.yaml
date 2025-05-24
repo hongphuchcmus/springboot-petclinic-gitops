@@ -1,0 +1,26 @@
+nameOverride: api-gateway
+serviceName: api-gateway
+
+replicaCount: 1
+
+image:
+  repository: hongphuchcmus/spring-petclinic-api-gateway
+  tag: latest
+  pullPolicy: IfNotPresent
+
+containerPort: 8080
+springProfile: docker
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources: {}
+
+ingress:
+  enabled: true
+  name: "api-gateway-ingress"
+  className: "nginx"
+  host: "spring-petclinic.com"
+  tls: false
+  tlsSecret: ""
