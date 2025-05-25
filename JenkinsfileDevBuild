@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    environment {
+        NAMESPACE = "developer-build"
+        SERVICES = "spring-petclinic-vets-service,spring-petclinic-customers-service,spring-petclinic-visits-service,spring-petclinic-admin-server,spring-petclinic-api-gateway,spring-petclinic-config-server,spring-petclinic-genai-service,spring-petclinic-discovery-server"
+    }
+
+    stages {
+        stage('Checkout Helm Repo') {
+            steps {
+                git url: 'https://github.com/hongphuchcmus/springboot-petclinic-gitops.git', branch: 'main'
+            }
+        }
+
+        stage('Helm Deploy') {
+            steps {
+                script {
+                    sh """
+                        kubectl get namespace "${env.NAMESPACE}" || kubectl create namespace "${env.NAMESPACE}"
+                    """
+
+                    env.SERVICES.split(',').each { service ->
+                        def serviceName = service.replaceFirst("spring-petclinic-", "")
+                        def chartPath = "helm/spring-petclinic-chart"
+                        def valuesFile = "${chartPath}/values-${serviceName}.yaml"
+                        def imageTag = params.get(serviceName)
+
+                        echo "Params: ${serviceName} - ${imageTag}"
+                        sh """            
+                            helm upgrade --install ${serviceName} ${chartPath} \
+                            --namespace ${env.NAMESPACE} \
+                            -f ${valuesFile} --set image.tag=${imageTag}
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
